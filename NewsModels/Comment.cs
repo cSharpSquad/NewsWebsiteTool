@@ -13,11 +13,11 @@ namespace NewsWebsite.Models
 
         [Required]
         [StringLength(255, MinimumLength = 3)]
-        //public string Content { get; set; }
+        public string Content { get; set; }
 
         public long NewsId { get; set; }
 
-        //public News News { get; set; }
+        public News News { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]

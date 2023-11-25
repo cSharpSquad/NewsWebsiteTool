@@ -38,7 +38,7 @@ namespace NewsWebsite.Models
 
         public long AuthorId { get; set; }
 
-        //public Author Author { get; set; }
+        public Author Author { get; set; }
 
         
         [DataType(DataType.DateTime)]
@@ -68,8 +68,8 @@ namespace NewsWebsite.Models
             Modified = modified.ToString("yyyy-MM-ddTHH:mm:ss.fff");
         }
 
-        //public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
-        //public ICollection<NewsTag> NewsTags { get; set; }
+        public ICollection<NewsTag> NewsTags { get; set; }
     }
 }
