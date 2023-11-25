@@ -12,5 +12,6 @@ namespace NewsWebsite.Models
 
         public long TagId { get; set; }
         //public Tag Tag { get; set; }
+
     }
 }
