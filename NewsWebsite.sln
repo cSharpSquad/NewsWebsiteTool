@@ -8,9 +8,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsModels", "NewsModels\NewsModels.csproj", "{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewDb", "NewDb\NewDb.csproj", "{6D549BD4-FCE6-48C6-BC20-4019B6547CE6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D805398A-02D0-4F9A-91A7-48B045167834} = {D805398A-02D0-4F9A-91A7-48B045167834}
-		{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D} = {FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F945525C-6CF9-4B1B-BDF2-793D93B649D6}"
+	ProjectSection(SolutionItems) = preProject
+		Startup.cs = Startup.cs
 	EndProjectSection
 EndProject
 Global
