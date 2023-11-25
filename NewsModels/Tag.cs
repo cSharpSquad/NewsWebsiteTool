@@ -23,7 +23,7 @@ namespace NewsWebsite.Models
             {
                 if (!uniqueNames.Add(value))
                 {
-                    throw new InvalidOperationException($"Имя '{value}' уже существует и не может быть добавлено.");
+                    throw new InvalidOperationException($"The name '{value}' already exists and cannot be added.");
                 }
                 name = value;
             }

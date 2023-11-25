@@ -21,7 +21,7 @@ namespace NewsModels
             {
                 if (!uniqueNames.Add(value))
                 {
-                    throw new InvalidOperationException($"Имя '{value}' уже существует и не может быть добавлено.");
+                    throw new InvalidOperationException($"The title '{value}' already exists and cannot be added.");
                 }
                 title = value;
             }
