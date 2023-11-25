@@ -10,7 +10,7 @@ namespace NewsWebsite.Models
 
         [Required]
         [StringLength(15, MinimumLength = 3)]
-        public string Name { get; set; }
+        //public string Name { get; set; }
 
         //public ICollection<News> News { get; set; }
     }
