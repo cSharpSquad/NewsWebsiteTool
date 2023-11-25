@@ -1,16 +1,33 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace NewsModels
 {
     public class News
     {
+        readonly HashSet<string> uniqueNames = new();
+        private string title;
+
         [Key]
         public long Id { get; set; }
 
-        [Required]
+        /// <summary>
+        /// News title
+        /// </summary>
         [StringLength(30, MinimumLength = 5)]
-        public string Title { get; set; }
+        public required string Title
+        {
+            get => title;
+            set
+            {
+                if (!uniqueNames.Add(value))
+                {
+                    throw new InvalidOperationException($"The title '{value}' already exists and cannot be added.");
+                }
+                title = value;
+            }
+        }
 
         [Required]
         [StringLength(255, MinimumLength = 5)]
