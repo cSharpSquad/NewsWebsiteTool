@@ -5,6 +5,9 @@ namespace NewsWebsite.Models
 {
     public class Comment
     {
+        private string modified;
+        private string created;
+
         [Key]
         public long Id { get; set; }
 
@@ -16,8 +19,31 @@ namespace NewsWebsite.Models
 
         //public News News { get; set; }
 
-        public DateTime Created { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
+        public string Created
+        {
+            get => created;
+            set => created = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
+        }
 
-        public DateTime? Modified { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
+        public string Modified
+        {
+            get => modified;
+            set => modified = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
+        }
+
+        public void SetCreated(DateTime created)
+        {
+            Created = created.ToString("yyyy-MM-ddTHH:mm:ss.fff");
+        }
+
+        public void SetModified(DateTime modified)
+        {
+            Modified = modified.ToString("yyyy-MM-ddTHH:mm:ss.fff");
+        }
     }
 }
