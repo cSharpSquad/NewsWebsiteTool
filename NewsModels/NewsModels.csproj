@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="diagram\" />
+    <Compile Remove="diagram\**" />
+    <EmbeddedResource Remove="diagram\**" />
+    <None Remove="diagram\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
