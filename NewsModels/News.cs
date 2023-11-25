@@ -21,6 +21,7 @@ namespace NewsModels
             get => title;
             set
             {
+                title = value ?? throw new ArgumentNullException(nameof(value), "Name cannot be null.");
                 if (!uniqueNames.Add(value))
                 {
                     throw new InvalidOperationException($"The title '{value}' already exists and cannot be added.");

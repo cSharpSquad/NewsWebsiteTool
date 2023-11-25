@@ -20,6 +20,7 @@ namespace NewsWebsite.Models
             get => name;
             set
             {
+                name = value ?? throw new ArgumentNullException(nameof(value), "Name cannot be null.");
                 if (!uniqueNames.Add(value))
                 {
                     throw new InvalidOperationException($"The name '{value}' already exists and cannot be added.");
