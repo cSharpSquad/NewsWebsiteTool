@@ -24,7 +24,7 @@ namespace NewsWebsite.Models
         public string Created
         {
             get => created;
-            set => created = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
+            set => created = value ?? throw new ArgumentNullException(nameof(value), "Created cannot be null.");
         }
 
 
@@ -33,7 +33,7 @@ namespace NewsWebsite.Models
         public string Modified
         {
             get => modified;
-            set => modified = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
+            set => modified = value ?? throw new ArgumentNullException(nameof(value), "Modified cannot be null.");
         }
 
         public void SetCreated(DateTime created)
