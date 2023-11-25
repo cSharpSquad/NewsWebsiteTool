@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsWebsite", "NewsWebsite\NewsWebsite.csproj", "{D805398A-02D0-4F9A-91A7-48B045167834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsModels", "NewsModels\NewsModels.csproj", "{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsModels", "NewsModels\NewsModels.csproj", "{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsDb", "NewsDb\NewsDb.csproj", "{0517B22E-E918-4471-96CC-C407ACA72B6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB7DD0DB-9E94-43C9-8E58-6DF5C55C126D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0517B22E-E918-4471-96CC-C407ACA72B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0517B22E-E918-4471-96CC-C407ACA72B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0517B22E-E918-4471-96CC-C407ACA72B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0517B22E-E918-4471-96CC-C407ACA72B6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
