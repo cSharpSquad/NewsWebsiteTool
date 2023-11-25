@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace NewsWebsite.Models
+namespace NewsModels
 {
     public class News
     {
