@@ -12,9 +12,11 @@ namespace NewsModels
         [Key]
         public long Id { get; set; }
 
-        [Required]
+        /// <summary>
+        /// News title
+        /// </summary>
         [StringLength(30, MinimumLength = 5)]
-        public string Title
+        public required string Title
         {
             get => title;
             set

@@ -14,9 +14,8 @@ namespace NewsWebsite.Models
         /// <summary>
         /// Tag name
         /// </summary>
-        [Required]
         [StringLength(15, MinimumLength = 3)]
-        public string Name
+        public required string Name
         {
             get => name;
             set
