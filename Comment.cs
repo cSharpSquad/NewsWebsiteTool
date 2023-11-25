@@ -14,7 +14,7 @@ namespace NewsWebsite.Models
 
         public long NewsId { get; set; }
 
-        public News News { get; set; }
+        //public News News { get; set; }
 
         public DateTime Created { get; set; }
 

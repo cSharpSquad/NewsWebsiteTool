@@ -19,14 +19,14 @@ namespace NewsWebsite.Models
 
         public long AuthorId { get; set; }
 
-        public Author Author { get; set; }
+        //public Author Author { get; set; }
 
         public DateTime Created { get; set; }
 
         public DateTime? Modified { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        //public ICollection<Comment> Comments { get; set; }
 
-        public ICollection<NewsTag> NewsTags { get; set; }
+        //public ICollection<NewsTag> NewsTags { get; set; }
     }
 }
