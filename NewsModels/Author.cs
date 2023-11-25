@@ -8,6 +8,9 @@ namespace NewsWebsite.Models
         [Key]
         public long Id { get; set; }
 
+        /// <summary>
+        /// author name
+        /// </summary>
         [Required]
         [StringLength(15, MinimumLength = 3)]
         public string Name { get; set; }
