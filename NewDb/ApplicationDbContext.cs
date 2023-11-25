@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using NewsWebsite.Models;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 
-namespace ApplicationDbContext
+namespace NewDb
 {
 
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
@@ -13,6 +14,7 @@ namespace ApplicationDbContext
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<NewsTag> NewsTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
