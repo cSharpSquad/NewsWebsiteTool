@@ -17,6 +17,9 @@ namespace NewsWebsite.Models
 
         public long NewsId { get; set; }
 
+        /// <summary>
+        /// News.
+        /// </summary>
         public News News { get; set; }
 
         [DataType(DataType.DateTime)]

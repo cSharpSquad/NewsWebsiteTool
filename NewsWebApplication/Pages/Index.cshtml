@@ -1,4 +1,5 @@
-﻿@page
+﻿
+@*  @page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -7,4 +8,37 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div> *@
+
+
+ @page
+@model IndexModel
+@using NewsWebsite.Models
+@{
+    ViewData["Title"] = "News Index";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Latest News</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Created</th>
+                <th>Modified</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.NewsList)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Content</td>
+                    <td>@item.Created</td>
+                    <td>@item.Modified</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

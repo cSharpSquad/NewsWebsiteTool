@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=NewDb;Trusted_Connection=True;"));
+    options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=NewDb;Trusted_Connection=True;TrustServerCertificate=True;"));
 
 var app = builder.Build();
 
