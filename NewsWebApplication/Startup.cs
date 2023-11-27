@@ -21,6 +21,8 @@ public class Startup
                 Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddControllersWithViews();
+
+        services.AddRazorPages(); //*
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,5 +50,10 @@ public class Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
         });
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+        }); //*
     }
 }

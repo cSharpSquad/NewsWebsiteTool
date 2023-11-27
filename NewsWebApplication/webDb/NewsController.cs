@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NewDb
@@ -158,6 +160,135 @@ namespace NewDb
             }
 
             return await query.ToListAsync();
+
+            [HttpGet]
+            async Task<ActionResult<PaginatedList<News>>> GetPaginatedNews([FromQuery] NewsPaginationModel paginationModel)
+            {
+                try
+                {
+                    var query = context.News.AsQueryable();
+
+                    // Apply search and filter conditions here based on paginationModel
+
+                    var paginatedList = await PaginatedList<News>.CreateAsync(query, paginationModel.PageNumber, paginationModel.PageSize);
+
+                    return Ok(paginatedList);
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions
+                    return StatusCode(500, "Internal Server Error");
+                }
+            }
+
+            [HttpGet]
+            IActionResult GetNews([FromQuery] string title)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(title))
+                    {
+                        return BadRequest("Title is required.");
+                    }
+
+                    // Your actual logic here
+                    // For example:
+                    var news = context.News.FirstOrDefault(n => n.Title == title);
+
+                    if (news == null)
+                    {
+                        return NotFound("News not found");
+                    }
+
+                    return Ok(news);
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions
+                    return StatusCode(500, "Internal Server Error");
+                }
+            }
+
+            [HttpPost]
+            IActionResult CreateNews([FromBody] NewsCreateModel model)
+            {
+                try
+                {
+                    // Other properties and validations for this code
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    // Your logic here
+                    var news = new News
+                    {
+                        Title = model.Title,
+                        Content = model.Content,
+                        // Set other properties based on your model
+                    };
+
+                    context.News.Add(news);
+                    context.SaveChanges();
+
+                    return Ok("News created successfully");
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception or handle it accordingly
+                    return StatusCode(500, "Internal Server Error");
+                }
+            }
+
+        }
+    }
+
+    public class NewsCreateModel
+    {
+        [Required(ErrorMessage = "Title is required.")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "Content is required.")]
+        public string Content { get; set; }
+
+        [StringLength(100, ErrorMessage = "Author name must be less than 100 characters.")]
+        public string AuthorName { get; set; }
+
+        [DataType(DataType.Date, ErrorMessage = "Invalid date format.")]
+        public DateTime? PublishedDate { get; set; }
+
+        // Add other properties and validations as needed
+    }
+
+    public class ValidSortByAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            string sortBy = value as string;
+
+            if (string.IsNullOrWhiteSpace(sortBy))
+            {
+                return ValidationResult.Success; // Allow empty sortBy
+            }
+
+            // Your custom validation logic for sortBy
+            // For example, let's check if it's a valid value
+            if (!IsValidSortBy(sortBy))
+            {
+                return new ValidationResult("Invalid sortBy value.");
+            }
+
+            return ValidationResult.Success;
+        }
+
+        private bool IsValidSortBy(string sortBy)
+        {
+            // Your custom logic to determine if sortBy is valid
+            // For example, check if it's one of the allowed values
+            return sortBy.Equals("CreatedAsc", StringComparison.OrdinalIgnoreCase) ||
+                   sortBy.Equals("CreatedDesc", StringComparison.OrdinalIgnoreCase) ||
+                   sortBy.Equals("ModifiedAsc", StringComparison.OrdinalIgnoreCase) ||
+                   sortBy.Equals("ModifiedDesc", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
