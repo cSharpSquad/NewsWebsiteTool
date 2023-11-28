@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
 using System.IO;
-using NewDb; // Make sure this is the correct namespace for your ApplicationDbContext
+using NewDb;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Exceptions;
