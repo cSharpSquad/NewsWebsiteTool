@@ -41,11 +41,8 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-var start = new Startup();
-start.ConfigureServices(builder.Services);
-
 var app = builder.Build();
-start.Configure(app);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -92,5 +89,3 @@ app.MapControllers();
 app.MapRazorPages();
 
 app.Run();
-
-
