@@ -10,15 +10,21 @@ using Validations;
 using Exceptions;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 public class Startup
 {
-    public IConfiguration Configuration { get; }
+	public IConfiguration Configuration { get; }
+
+    public Startup()
+    {
+        
+    }
 
     public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+	{
+		Configuration = configuration;
+	}
 
 	public void ConfigureServices(IServiceCollection services)
 	{
@@ -32,64 +38,62 @@ public class Startup
 
 		services.AddSwaggerGen(c =>
 		{
-			c.SwaggerDoc("v1", new OpenApiInfo
-			{
-				Title = "My Api",
-				Version = "v1",
-				Description = "A simple example ASP.NET Core Web API",
-				Contact = new OpenApiContact
-				{
-					Name = "Your Name",
-					Email = string.Empty,
-					Url = new Uri("https://www.example.com/"),
-				},
-			});
+			c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
 			// Optional: Set the comments path for the Swagger JSON and UI.
-			var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-			var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile); c.IncludeXmlComments(xmlPath);
+			//var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+			//var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+			//c.IncludeXmlComments(xmlPath);
 		});
 	}
 
-	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+	public void Configure(IApplicationBuilder app/*, IWebHostEnvironment env*/)
 	{
-		if (env.IsDevelopment())
+		app.UseSwagger();
+		app.UseSwaggerUI(c =>
 		{
-			app.UseDeveloperExceptionPage();
+			c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API v1");
+			c.RoutePrefix = "swagger";
+			c.DocExpansion(DocExpansion.None);
+		});
+		//if (env.IsDevelopment())
+		//{
+		//	app.UseDeveloperExceptionPage();
 
-			// Enable Swagger in Development Environment 
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
-			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-				// Optional: Serve Swagger UI at a specific route (e.g., /swagger) 
-				// c.RoutePrefix = "swagger";  
-			});
-		}
-		else
-		{
-			app.UseExceptionHandler(errorApp =>
-			{
-				errorApp.Run(async context =>
-				{
-					context.Response.ContentType = "application/json";
-					var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+		//	// Enable Swagger in Development Environment 
+		//	app.UseSwagger();
+		//	app.UseSwaggerUI(c =>
+		//	{
+		//		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+		//		c.DocExpansion(DocExpansion.None);
+		//		// Optional: Serve Swagger UI at a specific route (e.g., /swagger) 
+		//		c.RoutePrefix = "swagger";
+		//	});
+		//}
+		//else
+		//{
+		//	app.UseExceptionHandler(errorApp =>
+		//	{
+		//		errorApp.Run(async context =>
+		//		{
+		//			context.Response.ContentType = "application/json";
+		//			var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
 
-					if (exceptionHandlerPathFeature?.Error is ResourceNotFoundException)
-					{
-						context.Response.StatusCode = StatusCodes.Status404NotFound;
-						await context.Response.WriteAsync("{\"error\": \"Resource not found\"}");
-					}
-					else
-					{
-						context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-						await context.Response.WriteAsync("{\"error\": \"An unexpected error occurred.\"}");
-					}
+		//			if (exceptionHandlerPathFeature?.Error is ResourceNotFoundException)
+		//			{
+		//				context.Response.StatusCode = StatusCodes.Status404NotFound;
+		//				await context.Response.WriteAsync("{\"error\": \"Resource not found\"}");
+		//			}
+		//			else
+		//			{
+		//				context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+		//				await context.Response.WriteAsync("{\"error\": \"An unexpected error occurred.\"}");
+		//			}
 
-					// Log the exception or perform other actions  
-				});
-			});
-			app.UseHsts();
-		}
+		//			// Log the exception or perform other actions  
+		//		});
+		//	});
+		//	app.UseHsts();
+		//}
 
 		// Common middleware for both Development and Production 
 		app.UseHttpsRedirection();
@@ -100,6 +104,7 @@ public class Startup
 			endpoints.MapControllers();
 		});
 	}
+}
 	//   public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 	//{
 	//	if (env.IsDevelopment())
@@ -167,4 +172,4 @@ public class Startup
 	//          endpoints.MapRazorPages();
 	//      }); //*
 	//  }
-}
+//}

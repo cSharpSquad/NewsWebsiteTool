@@ -13,8 +13,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=NewDb;Trusted_Connection=True;TrustServerCertificate=True;"));
 
-var app = builder.Build();
+var start = new Startup();
+start.ConfigureServices(builder.Services);
 
+var app = builder.Build();
+start.Configure(app);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -33,4 +36,5 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
 

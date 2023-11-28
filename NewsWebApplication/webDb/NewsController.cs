@@ -7,11 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exceptions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace NewDb.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/news")]
 	[ApiController]
+	[Produces("application/json")]
+	[ApiExplorerSettings(GroupName = "v1")]
+	[SwaggerTag("Operations for creating, updating, retrieving, and deleting news in the application")]
 	public class NewsController : ControllerBase
 	{
 		private readonly ApplicationDbContext context;
@@ -30,6 +34,11 @@ namespace NewDb.Controllers
 			return Ok(paginatedList);
 		}
 
+		/// <summary>
+		/// Gets a specific news item by ID.
+		/// </summary>
+		/// <param name="id">The ID of the news item.</param>
+		/// <returns>The requested news item.</returns>
 		// GET: api/News/5
 		[HttpGet("{id}")]
 		public async Task<ActionResult<News>> GetNews(long id)
@@ -81,6 +90,12 @@ namespace NewDb.Controllers
 
 		// DELETE: api/News/5
 		[HttpDelete("{id}")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(401)]
+		[ProducesResponseType(403)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
+		[SwaggerOperation("Deletes specific news with the supplied id")]
 		public async Task<IActionResult> DeleteNews(long id)
 		{
 			var news = await context.News.FindAsync(id);
@@ -154,7 +169,16 @@ namespace NewDb.Controllers
 			return Ok(paginatedList);
 		}
 
+		/// <summary> 
+		/// Creates a piece of news. 
+		/// </summary> 
+		/// <param name="news">The news item to create.</param> 
+		/// <returns>The created news item.</returns> 
+		/// <response code="201">Successfully created a piece of news.</response> 
+		/// <response code="400">If the news item is null or invalid.</response> 
 		[HttpPost]
+		[ProducesResponseType(typeof(News), StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public IActionResult CreateNews([FromBody] News news)
 		{
 			if (!ModelState.IsValid)
