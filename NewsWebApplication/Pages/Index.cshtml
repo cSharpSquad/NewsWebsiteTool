@@ -1,5 +1,4 @@
-﻿
-@*  @page
+﻿@*  @page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -11,34 +10,39 @@
 </div> *@
 
 
- @page
+@page
 @model IndexModel
 @using NewsWebsite.Models
 @{
-    ViewData["Title"] = "News Index";
+	ViewData["Title"] = "News Index";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Latest News</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Created</th>
-                <th>Modified</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.NewsList)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td>@item.Content</td>
-                    <td>@item.Created</td>
-                    <td>@item.Modified</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<h1 class="display-4">Latest News</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Title</th>
+				<th>Content</th>
+				<th>Author</th>
+				<th>Created</th>
+				<th>Modified</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.NewsList != null)
+			{
+				@foreach (var item in Model.NewsList)
+				{
+					<tr>
+						<td>@item.Title</td>
+						<td>@item.Content</td>
+						<th>@item.Author</th>
+						<td>@item.Created</td>
+						<td>@item.Modified</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
 </div>

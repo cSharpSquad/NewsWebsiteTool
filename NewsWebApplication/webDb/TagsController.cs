@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
 using System.Linq;
 
@@ -97,6 +98,15 @@ namespace NewDb
             await context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // GET: api/Tags 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Tag>>> GetTags([FromQuery] NewsPaginationModel pagination)
+        {
+            var query = context.Tags.AsQueryable();
+            var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pagination.PageNumber, pagination.PageSize);
+            return Ok(paginatedList);
         }
     }
 }
