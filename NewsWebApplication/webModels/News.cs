@@ -14,11 +14,12 @@ namespace NewsWebsite.Models
         [Key]
         public long Id { get; set; }
 
-        /// <summary>
-        /// News title
-        /// </summary>
-        [StringLength(30, MinimumLength = 5)]
-        public required string Title
+		/// <summary>
+		/// News title
+		/// </summary>
+		[Required(ErrorMessage = "Title is required.")]
+		[StringLength(100, MinimumLength = 5, ErrorMessage = "Title must be between 5 and 100 characters.")]
+		public string Title
         {
             get => title;
             set
@@ -32,8 +33,7 @@ namespace NewsWebsite.Models
             }
         }
 
-        [Required]
-        [StringLength(255, MinimumLength = 5)]
+		[Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; }
 
         public long AuthorId { get; set; }
