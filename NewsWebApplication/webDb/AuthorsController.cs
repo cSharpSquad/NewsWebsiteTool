@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NewDb
 {
@@ -125,6 +127,18 @@ namespace NewDb
             await context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors([FromQuery] NewsPaginationModel pagination)
+        {
+            var query = context.Authors.AsQueryable();
+
+            // Apply any additional filtering to the query here 
+
+            var paginatedList = await PaginatedList<Author>.CreateAsync(query, pagination.PageNumber, pagination.PageSize);
+            return Ok(paginatedList);
         }
     }
 

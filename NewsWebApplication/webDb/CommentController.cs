@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NewDb
 {
@@ -103,6 +105,17 @@ namespace NewDb
         private bool CommentExists(long id)
         {
             return context.Comments.Any(e => e.Id == id);
+        }
+
+        // In CommentsController 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments([FromQuery] NewsPaginationModel pagination)
+        {
+            var query = context.Comments.AsQueryable();
+
+            // Your existing query 
+            var paginatedList = await PaginatedList<Comment>.CreateAsync(query, pagination.PageNumber, pagination.PageSize);
+            return Ok(paginatedList);
         }
     }
 }
