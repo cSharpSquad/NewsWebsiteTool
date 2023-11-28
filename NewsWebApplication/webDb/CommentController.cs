@@ -146,6 +146,17 @@ namespace NewDb
 			}
 			// Add similar checks and updates for other fields as needed
 		}
+
+		private IEnumerable<object> CreateLinksForComment(long id)
+		{
+			var links = new List<object>
+			{
+				new { rel = "self", href = Url.Link(nameof(GetComment), new { id }) }, 
+                // Add other relevant links here 
+            };
+
+			return links;
+		}
 	}
 }
 

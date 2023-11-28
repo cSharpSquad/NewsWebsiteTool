@@ -32,7 +32,12 @@ namespace NewDb
 			}
 
 			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
-			return Ok(paginatedList);
+			var resources = paginatedList.Items.Select(tag => new
+			{
+				Tag = tag,
+				Links = CreateLinksForTag(tag.Id)
+			});
+			return Ok(resources);
 		}
 
 		// GET: api/Tags/5
@@ -44,8 +49,14 @@ namespace NewDb
             {
                 return NotFound();
             }
-            return tag;
-        }
+			var resource = new
+			{
+				Tag = tag,
+				Links = CreateLinksForTag(id)
+			};
+
+			return Ok(resource);
+		}
 
 		// GET: api/news/{newsId}/tags with pagination 
 		[HttpGet("~/api/v{version:apiVersion}/news/{newsId:long}/tags")]
@@ -59,7 +70,12 @@ namespace NewDb
 				.Select(nt => nt.Tag);
 
 			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
-			return Ok(paginatedList);
+			var resources = paginatedList.Items.Select(tag => new
+			{
+				Tag = tag,
+				Links = CreateLinksForTag(tag.Id)
+			});
+			return Ok(resources);
 		}
 
 		// POST: api/Tags
@@ -68,8 +84,14 @@ namespace NewDb
         {
             context.Tags.Add(tag);
             await context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tag);
-        }
+			var resource = new
+			{
+				Tag = tag,
+				Links = CreateLinksForTag(tag.Id)
+			};
+
+			return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, resource);
+		}
 
         // PUT: api/Tags/5
         // Merged PutTag and UpdateTag methods into one
@@ -113,7 +135,19 @@ namespace NewDb
             return NoContent();
         }
 
-        private bool TagExists(long id)
+		private IEnumerable<object> CreateLinksForTag(long id)
+		{
+			var links = new List<object>
+			{
+				new { rel = "self", href = Url.Link(nameof(GetTag), new { id }), method = "GET" },
+				new { rel = "update", href = Url.Link(nameof(PutTag), new { id }), method = "PUT" },
+				new { rel = "delete", href = Url.Link(nameof(DeleteTag), new { id }), method = "DELETE" },
+            };
+
+			return links;
+		}
+
+		private bool TagExists(long id)
         {
             return context.Tags.Any(e => e.Id == id);
         }
