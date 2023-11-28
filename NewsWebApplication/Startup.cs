@@ -13,16 +13,17 @@ using System.Reflection;
 
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
     }
 
-	public void ConfigureServices(IServiceCollection services)
-	{
-		services.AddDbContext<ApplicationDbContext>(options =>
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddDbContext<ApplicationDbContext>(options =>
 			options.UseSqlServer(
 				Configuration.GetConnectionString("DefaultConnection")));
 
@@ -50,22 +51,20 @@ public class Startup
 		});
 	}
 
-	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-	{
-		if (env.IsDevelopment())
-		{
-			app.UseDeveloperExceptionPage();
-
-			// Enable Swagger in Development Environment 
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
-			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-				// Optional: Serve Swagger UI at a specific route (e.g., /swagger) 
-				// c.RoutePrefix = "swagger";  
-			});
-		}
-		else
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // Configure the HTTP request pipeline.
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = "swagger";
+            });
+        }
+        else
 		{
 			app.UseExceptionHandler(errorApp =>
 			{
