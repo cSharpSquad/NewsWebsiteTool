@@ -147,9 +147,6 @@ namespace NewDb
             return NoContent();
         }
 
-        // This method has been removed since it conflicts with GetAuthors.
-        // If you need pagination, integrate it into the existing GetAuthors method.
-
         private bool AuthorExists(long id)
         {
             return context.Authors.Any(e => e.Id == id);
