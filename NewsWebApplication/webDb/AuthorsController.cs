@@ -6,39 +6,93 @@ using System.Linq;
 
 namespace NewDb
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthorsController : ControllerBase
+	// Versioning applied to the controller 
+	[ApiVersion("1.0")]
+	[Route("api/v{version:apiVersion}/[controller]")]
+	[ApiController]
+	public class AuthorsController : ControllerBase
     {
         private readonly ApplicationDbContext context;
 
         public AuthorsController(ApplicationDbContext context) => this.context = context;
 
-        // GET: api/Authors
-        // This route remains unchanged as it's the default for the controller.
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
-        {
-            return await context.Authors.ToListAsync();
-        }
+		// GET: api/Authors with optional name filter and pagination 
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<Author>>> GetAuthors(
+			[FromQuery] string namePart,
+			[FromQuery] int pageNumber = 1,
+			[FromQuery] int pageSize = 10)
+		{
+			if (pageNumber < 1 || pageSize < 1)
+			{
+				return BadRequest("Invalid page number or page size.");
+			}
 
-        // GET: api/Authors/5
-        // The route template here is fine since it specifies an ID.
-        [HttpGet("{id:long}")] // Adding ":long" ensures that the id parameter is of type long.
-        public async Task<ActionResult<Author>> GetAuthor(long id)
-        {
-            var author = await context.Authors.FindAsync(id);
+			var query = context.Authors.AsQueryable();
 
-            if (author == null)
-            {
-                return NotFound();
-            }
+			if (!string.IsNullOrEmpty(namePart))
+			{
+				query = query.Where(a => a.Name.Contains(namePart));
+			}
 
-            return author;
-        }
+			var paginatedList = await PaginatedList<Author>.CreateAsync(query, pageNumber, pageSize);
+			return Ok(paginatedList);
+		}
 
-        // POST: api/Authors
-        [HttpPost]
+		// GET: api/Authors/5
+		[HttpGet("{id:long}")]
+		public async Task<ActionResult<Author>> GetAuthor(long id)
+		{
+			var author = await context.Authors.FindAsync(id);
+			if (author == null)
+			{
+				return NotFound();
+			}
+			return author;
+		}
+
+		// GET: api/news/{newsId}/authors  
+		[HttpGet("~/api/v{version:apiVersion}/news/{newsId:long}/authors")]
+		public async Task<ActionResult<Author>> GetAuthorByNewsId(long newsId)
+		{
+			var author = await context.News
+							.Where(n => n.Id == newsId)
+							.Select(n => n.Author)
+							.FirstOrDefaultAsync();
+
+			if (author == null)
+			{
+				return NotFound();
+			}
+			return author;
+		}
+
+		// GET: api/Authors/NewsCount with pagination 
+		[HttpGet("NewsCount")]
+		public async Task<ActionResult<IEnumerable<AuthorNewsCountDto>>> GetAuthorsWithNewsCount(
+			[FromQuery] int pageNumber = 1,
+			[FromQuery] int pageSize = 10)
+		{
+			if (pageNumber < 1 || pageSize < 1)
+			{
+				return BadRequest("Invalid page number or page size.");
+			}
+
+			var query = context.Authors
+				.Select(author => new AuthorNewsCountDto
+				{
+					AuthorId = author.Id,
+					AuthorName = author.Name,
+					NewsCount = author.News.Count
+				})
+				.OrderByDescending(a => a.NewsCount);
+
+			var paginatedList = await PaginatedList<AuthorNewsCountDto>.CreateAsync(query, pageNumber, pageSize);
+			return Ok(paginatedList);
+		}
+
+		// POST: api/Authors
+		[HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(Author author)
         {
             context.Authors.Add(author);
@@ -91,24 +145,6 @@ namespace NewDb
             await context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // GET: api/Authors/NewsCount
-        // Here we specify a different route to avoid conflict.
-        [HttpGet("NewsCount")]
-        public async Task<ActionResult<IEnumerable<AuthorNewsCountDto>>> GetAuthorsWithNewsCount()
-        {
-            var authorsWithCount = await context.Authors
-                .Select(author => new AuthorNewsCountDto
-                {
-                    AuthorId = author.Id,
-                    AuthorName = author.Name,
-                    NewsCount = author.News.Count
-                })
-                .OrderByDescending(a => a.NewsCount)
-                .ToListAsync();
-
-            return authorsWithCount;
         }
 
         // This method has been removed since it conflicts with GetAuthors.
