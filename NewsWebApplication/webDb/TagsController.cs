@@ -7,26 +7,36 @@ using System.Threading.Tasks;
 
 namespace NewDb
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TagsController : ControllerBase
+	// Versioning applied to the controller 
+	[ApiVersion("1.0")]
+	[Route("api/v{version:apiVersion}/[controller]")]
+	[ApiController]
+	public class TagsController : ControllerBase
     {
         private readonly ApplicationDbContext context;
 
         public TagsController(ApplicationDbContext context) => this.context = context;
 
-        // GET: api/Tags or api/Tags?pageNumber=1&pageSize=10
-        // Combined GET for tags with optional pagination
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTags([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
-        {
-            var query = context.Tags.AsQueryable();
-            var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
-            return Ok(paginatedList);
-        }
+		// GET: api/Tags with optional name filter and pagination 
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<Tag>>> GetTags(
+			[FromQuery] string namePart,
+			[FromQuery] int pageNumber = 1,
+			[FromQuery] int pageSize = 10)
+		{
+			var query = context.Tags.AsQueryable();
 
-        // GET: api/Tags/5
-        [HttpGet("{id:long}")] // Ensure id is of type long
+			if (!string.IsNullOrEmpty(namePart))
+			{
+				query = query.Where(t => t.Name.Contains(namePart));
+			}
+
+			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
+			return Ok(paginatedList);
+		}
+
+		// GET: api/Tags/5
+		[HttpGet("{id:long}")] // Ensure id is of type long
         public async Task<ActionResult<Tag>> GetTag(long id)
         {
             var tag = await context.Tags.FindAsync(id);
@@ -37,8 +47,23 @@ namespace NewDb
             return tag;
         }
 
-        // POST: api/Tags
-        [HttpPost]
+		// GET: api/news/{newsId}/tags with pagination 
+		[HttpGet("~/api/v{version:apiVersion}/news/{newsId:long}/tags")]
+		public async Task<ActionResult<IEnumerable<Tag>>> GetTagsByNewsId(
+			long newsId,
+			[FromQuery] int pageNumber = 1,
+			[FromQuery] int pageSize = 10)
+		{
+			var query = context.NewsTags
+				.Where(nt => nt.NewsId == newsId)
+				.Select(nt => nt.Tag);
+
+			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
+			return Ok(paginatedList);
+		}
+
+		// POST: api/Tags
+		[HttpPost]
         public async Task<ActionResult<Tag>> PostTag(Tag tag)
         {
             context.Tags.Add(tag);
@@ -86,18 +111,6 @@ namespace NewDb
             context.Tags.Remove(tag);
             await context.SaveChangesAsync();
             return NoContent();
-        }
-
-        // GET: api/Tags/bynews/5
-        // This method is fine since it has a unique route
-        [HttpGet("bynews/{newsId:long}")] // Ensure newsId is of type long
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTagsByNews(long newsId)
-        {
-            var tags = await context.NewsTags
-                                    .Where(nt => nt.NewsId == newsId)
-                                    .Select(nt => nt.Tag)
-                                    .ToListAsync();
-            return tags;
         }
 
         private bool TagExists(long id)
