@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
 using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NewDb
 {
@@ -16,15 +14,28 @@ namespace NewDb
 
         public CommentsController(ApplicationDbContext context) => this.context = context;
 
-        // GET: api/Comments 
+        // GET: api/Comments or api/Comments?newsId=5 or api/Comments?pageNumber=1&pageSize=10
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments(
+            [FromQuery] long? newsId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
-            return await context.Comments.ToListAsync();
+            IQueryable<Comment> query = context.Comments;
+
+            // Filter by newsId if it's provided
+            if (newsId.HasValue)
+            {
+                query = query.Where(c => c.NewsId == newsId.Value);
+            }
+
+            // Apply pagination
+            var paginatedList = await PaginatedList<Comment>.CreateAsync(query, pageNumber, pageSize);
+            return Ok(paginatedList);
         }
 
         // GET: api/Comments/5 
-        [HttpGet("{id}")]
+        [HttpGet("{id:long}")] // Adding ":long" ensures that the id parameter is of type long.
         public async Task<ActionResult<Comment>> GetComment(long id)
         {
             var comment = await context.Comments.FindAsync(id);
@@ -35,15 +46,6 @@ namespace NewDb
             }
 
             return comment;
-        }
-
-        // GET: api/Comments/bynews/5 
-        [HttpGet("bynews/{newsId}")]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByNews(long newsId)
-        {
-            return await context.Comments
-                                 .Where(c => c.NewsId == newsId)
-                                 .ToListAsync();
         }
 
         // POST: api/Comments 
@@ -57,7 +59,7 @@ namespace NewDb
         }
 
         // PUT: api/Comments/5 
-        [HttpPut("{id}")]
+        [HttpPut("{id:long}")] // Adding ":long" for consistency.
         public async Task<IActionResult> PutComment(long id, Comment comment)
         {
             if (id != comment.Id)
@@ -87,7 +89,7 @@ namespace NewDb
         }
 
         // DELETE: api/Comments/5 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:long}")] // Adding ":long" for consistency.
         public async Task<IActionResult> DeleteComment(long id)
         {
             var comment = await context.Comments.FindAsync(id);
@@ -106,16 +108,6 @@ namespace NewDb
         {
             return context.Comments.Any(e => e.Id == id);
         }
-
-        // In CommentsController 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments([FromQuery] NewsPaginationModel pagination)
-        {
-            var query = context.Comments.AsQueryable();
-
-            // Your existing query 
-            var paginatedList = await PaginatedList<Comment>.CreateAsync(query, pagination.PageNumber, pagination.PageSize);
-            return Ok(paginatedList);
-        }
     }
 }
+

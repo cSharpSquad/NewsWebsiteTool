@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using NewsWebApplication.Pagination;
 using NewsWebsite.Models;
 using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NewDb
 {
@@ -16,15 +14,17 @@ namespace NewDb
 
         public AuthorsController(ApplicationDbContext context) => this.context = context;
 
-        // GET: api/Authors 
+        // GET: api/Authors
+        // This route remains unchanged as it's the default for the controller.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
         {
             return await context.Authors.ToListAsync();
         }
 
-        // GET: api/Authors/5 
-        [HttpGet("{id}")]
+        // GET: api/Authors/5
+        // The route template here is fine since it specifies an ID.
+        [HttpGet("{id:long}")] // Adding ":long" ensures that the id parameter is of type long.
         public async Task<ActionResult<Author>> GetAuthor(long id)
         {
             var author = await context.Authors.FindAsync(id);
@@ -37,7 +37,7 @@ namespace NewDb
             return author;
         }
 
-        // POST: api/Authors 
+        // POST: api/Authors
         [HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(Author author)
         {
@@ -47,8 +47,8 @@ namespace NewDb
             return CreatedAtAction(nameof(GetAuthor), new { id = author.Id }, author);
         }
 
-        // PUT: api/Authors/5 
-        [HttpPut("{id}")]
+        // PUT: api/Authors/5
+        [HttpPut("{id:long}")] // Adding ":long" for consistency.
         public async Task<IActionResult> PutAuthor(long id, Author author)
         {
             if (id != author.Id)
@@ -77,8 +77,8 @@ namespace NewDb
             return NoContent();
         }
 
-        // DELETE: api/Authors/5 
-        [HttpDelete("{id}")]
+        // DELETE: api/Authors/5
+        [HttpDelete("{id:long}")] // Adding ":long" for consistency.
         public async Task<IActionResult> DeleteAuthor(long id)
         {
             var author = await context.Authors.FindAsync(id);
@@ -93,7 +93,8 @@ namespace NewDb
             return NoContent();
         }
 
-        // GET: api/Authors/NewsCount 
+        // GET: api/Authors/NewsCount
+        // Here we specify a different route to avoid conflict.
         [HttpGet("NewsCount")]
         public async Task<ActionResult<IEnumerable<AuthorNewsCountDto>>> GetAuthorsWithNewsCount()
         {
@@ -110,35 +111,12 @@ namespace NewDb
             return authorsWithCount;
         }
 
+        // This method has been removed since it conflicts with GetAuthors.
+        // If you need pagination, integrate it into the existing GetAuthors method.
+
         private bool AuthorExists(long id)
         {
             return context.Authors.Any(e => e.Id == id);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(long id, Author author)
-        {
-            if (id != author.Id)
-            {
-                return BadRequest();
-            }
-
-            context.Entry(author).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors([FromQuery] NewsPaginationModel pagination)
-        {
-            var query = context.Authors.AsQueryable();
-
-            // Apply any additional filtering to the query here 
-
-            var paginatedList = await PaginatedList<Author>.CreateAsync(query, pagination.PageNumber, pagination.PageSize);
-            return Ok(paginatedList);
         }
     }
 
@@ -148,5 +126,5 @@ namespace NewDb
         public string AuthorName { get; set; }
         public int NewsCount { get; set; }
     }
-
 }
+

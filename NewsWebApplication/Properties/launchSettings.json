@@ -3,6 +3,10 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
+<<<<<<< HEAD
+=======
+      "applicationUrl": "http://localhost:44359",
+>>>>>>> kigakoko
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
