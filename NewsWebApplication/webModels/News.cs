@@ -8,8 +8,6 @@ namespace NewsWebsite.Models
     {
         readonly HashSet<string> uniqueNames = new();
         private string title;
-        private string modified;
-        private string created;
 
         [Key]
         public long Id { get; set; }
@@ -33,43 +31,23 @@ namespace NewsWebsite.Models
             }
         }
 
-		[Required(ErrorMessage = "Content is required.")]
+        [Required(ErrorMessage = "Content is required.")]
         public string Content { get; set; }
 
         public long AuthorId { get; set; }
 
-        public Author Author { get; set; }
+        public Author? Author { get; set; }
 
-        
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
-        public string Created
-        {
-            get => created;
-            set => created = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
-        }
+        public DateTime? Created { get; set; }
 
-        
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
-        public string Modified
-        {
-            get => modified;
-            set => modified = DateTime.TryParse(value, out _) ? value : throw new ArgumentException("Invalid DateTime format");
-        }
+        public DateTime? Modified { get; set; }
 
-        public void SetCreated(DateTime created)
-        {
-            Created = created.ToString("yyyy-MM-ddTHH:mm:ss.fff");
-        }
+        public ICollection<Comment>? Comments { get; set; }
 
-        public void SetModified(DateTime modified)
-        {
-            Modified = modified.ToString("yyyy-MM-ddTHH:mm:ss.fff");
-        }
-
-        public ICollection<Comment> Comments { get; set; }
-
-        public ICollection<NewsTag> NewsTags { get; set; }
+        public ICollection<NewsTag>? NewsTags { get; set; }
     }
 }
