@@ -9,6 +9,13 @@ namespace NewsWebsite.Models
         readonly HashSet<string> uniqueNames = new();
         private string title;
 
+        public News()
+        {
+			Created = DateTime.UtcNow;
+			Modified = DateTime.UtcNow;
+		}
+
+
         [Key]
         public long Id { get; set; }
 
@@ -49,5 +56,6 @@ namespace NewsWebsite.Models
         public ICollection<Comment>? Comments { get; set; }
 
         public ICollection<NewsTag>? NewsTags { get; set; }
+
     }
 }

@@ -12,7 +12,7 @@ using NewDb;
 namespace NewsWebApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231129041419_InitialCreate")]
+    [Migration("20231129112026_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
