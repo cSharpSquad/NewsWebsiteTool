@@ -5,6 +5,12 @@ namespace NewsWebsite.Models
 {
     public class Comment
     {
+        public Comment()
+        {
+			Created = DateTime.UtcNow;
+			Modified = DateTime.UtcNow;
+		}
+
         [Key]
         public long Id { get; set; }
 

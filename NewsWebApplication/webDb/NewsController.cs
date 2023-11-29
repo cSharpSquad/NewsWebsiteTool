@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exceptions;
 using NewsWebApplication.DTO;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace NewDb.Controllers
 {
@@ -80,7 +82,18 @@ namespace NewDb.Controllers
 
             // Apply pagination 
             var paginatedList = await PaginatedList<News>.CreateAsync(query, pageNumber, pageSize);
-            return Ok(paginatedList);
+
+			var options = new JsonSerializerOptions
+			{
+				ReferenceHandler = ReferenceHandler.Preserve,
+				WriteIndented = true
+			};
+
+			var json = JsonSerializer.Serialize(paginatedList, options);
+
+			return Ok(json);
+
+			//return Ok(paginatedList);
         }
 
         // GET: api/News/5
