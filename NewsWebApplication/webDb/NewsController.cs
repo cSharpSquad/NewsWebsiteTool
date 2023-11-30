@@ -55,7 +55,8 @@ namespace NewDb.Controllers
 
 			if (tagNames != null && tagNames.Any())
 			{
-				query = query.Where(n => context.NewsTags.Any(nt => nt.NewsId == n.Id && tagIds!.Contains(nt.TagId)));
+				query = query.Where(n => context.NewsTags
+				  .Any(nt => nt.NewsId == n.Id && tagNames.Contains(context.Tags.FirstOrDefault(t => t.Id == nt.TagId).Name)));
 			}
 
 			if (!string.IsNullOrEmpty(titlePart))
@@ -107,6 +108,7 @@ namespace NewDb.Controllers
 				Id = newsItem.Id,
 				Title = newsItem.Title,
 				Content = newsItem.Content,
+				AuthorId = newsItem.AuthorId,
 				Created = newsItem.Created,
 				Modified = newsItem.Modified,
 				Links = new List<LinkDto>
@@ -160,6 +162,7 @@ namespace NewDb.Controllers
 
 			existingNews.Title = newsUpdateDTO.Title ?? existingNews.Title;
 			existingNews.Content = newsUpdateDTO.Content ?? existingNews.Content;
+			existingNews.AuthorId = newsUpdateDTO.AuthorId ?? existingNews.AuthorId;
 			existingNews.Modified = DateTime.Now;
 
 			try
