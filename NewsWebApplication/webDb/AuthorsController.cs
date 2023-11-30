@@ -129,16 +129,52 @@ namespace NewDb
 			return CreatedAtAction(nameof(GetAuthor), new { id = author.Id }, author);
 		}
 
+		//// PUT: api/Authors/5
+		//[HttpPut("{id:long}")] // Adding ":long" for consistency.
+		//public async Task<IActionResult> PutAuthor(long id, Author author)
+		//{
+		//	if (id != author.Id)
+		//	{
+		//		return BadRequest();
+		//	}
+
+		//	context.Entry(author).State = EntityState.Modified;
+
+		//	try
+		//	{
+		//		await context.SaveChangesAsync();
+		//	}
+		//	catch (DbUpdateConcurrencyException)
+		//	{
+		//		if (!AuthorExists(id))
+		//		{
+		//			return NotFound();
+		//		}
+		//		else
+		//		{
+		//			throw;
+		//		}
+		//	}
+
+		//	return NoContent();
+		//}
+
 		// PUT: api/Authors/5
-		[HttpPut("{id:long}")] // Adding ":long" for consistency.
-		public async Task<IActionResult> PutAuthor(long id, Author author)
+		[HttpPut("{id:long}")]
+		public async Task<IActionResult> PutAuthor(long id, AuthorUpdateDto authorDto)
 		{
-			if (id != author.Id)
+			var existingAuthor = await context.Authors
+				.FirstOrDefaultAsync(a => a.Id == id);
+
+			if (existingAuthor == null)
 			{
-				return BadRequest();
+				return NotFound();
 			}
 
-			context.Entry(author).State = EntityState.Modified;
+			// Update properties of existingAuthor based on authorDto
+			existingAuthor.Name = authorDto.Name;
+
+			context.Entry(existingAuthor).State = EntityState.Modified;
 
 			try
 			{

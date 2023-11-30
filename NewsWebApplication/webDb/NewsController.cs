@@ -139,13 +139,40 @@ namespace NewDb.Controllers
 		}
 
 
+		//[HttpPost]
+		//public async Task<ActionResult<News>> PostNews(News news)
+		//{
+		//	if (!ModelState.IsValid)
+		//	{
+		//		return BadRequest(ModelState);
+		//	}
+
+		//	// Check and add new authors or tags if passed 
+		//	HandleNewAuthorsAndTags(news);
+
+		//	context.News.Add(news);
+		//	await context.SaveChangesAsync();
+
+		//	return CreatedAtAction(nameof(GetNews), new { id = news.Id }, news);
+		//}
+
 		[HttpPost]
-		public async Task<ActionResult<News>> PostNews(News news)
+		public async Task<ActionResult<News>> PostNews([FromBody] NewsCreateDTO newsCreateDTO)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
+
+			// Validate and map DTO to entity
+			var news = new News
+			{
+				Title = newsCreateDTO.Title,
+				Content = newsCreateDTO.Content,
+				AuthorId = newsCreateDTO.AuthorId,
+				Created = DateTime.Now,
+				Modified = DateTime.Now
+			};
 
 			// Check and add new authors or tags if passed 
 			HandleNewAuthorsAndTags(news);
@@ -153,11 +180,43 @@ namespace NewDb.Controllers
 			context.News.Add(news);
 			await context.SaveChangesAsync();
 
+			// Handle tags association
+			await HandleTagsAssociation(news.Id, newsCreateDTO.Tags);
+
 			return CreatedAtAction(nameof(GetNews), new { id = news.Id }, news);
 		}
 
+		//[HttpPut("{id:long}")]
+		//public async Task<IActionResult> PutNews(long id, News updatedNews)
+		//{
+		//	var existingNews = await context.News
+		//		.FirstOrDefaultAsync(n => n.Id == id);
+
+		//	if (existingNews == null)
+		//	{
+		//		return NotFound();
+		//	}
+
+		//	// Update fields from updatedNews to existingNews 
+		//	UpdateNewsFields(existingNews, updatedNews);
+
+		//	// Check and add new authors or tags if passed 
+		//	HandleNewAuthorsAndTags(existingNews);
+
+		//	try
+		//	{
+		//		await context.SaveChangesAsync();
+		//	}
+		//	catch (DbUpdateConcurrencyException)
+		//	{
+		//		throw new DbUpdateConcurrencyException();
+		//	}
+
+		//	return NoContent();
+		//}
+
 		[HttpPut("{id:long}")]
-		public async Task<IActionResult> PutNews(long id, News updatedNews)
+		public async Task<IActionResult> PutNews(long id, [FromBody] NewsUpdateDTO newsUpdateDTO)
 		{
 			var existingNews = await context.News
 				.FirstOrDefaultAsync(n => n.Id == id);
@@ -167,11 +226,11 @@ namespace NewDb.Controllers
 				return NotFound();
 			}
 
-			// Update fields from updatedNews to existingNews 
-			UpdateNewsFields(existingNews, updatedNews);
-
-			// Check and add new authors or tags if passed 
-			HandleNewAuthorsAndTags(existingNews);
+			// Validate and map your DTO to your entity
+			// You can use AutoMapper or manually map properties
+			existingNews.Title = newsUpdateDTO.Title ?? existingNews.Title;
+			existingNews.Content = newsUpdateDTO.Content ?? existingNews.Content;
+			existingNews.Modified = DateTime.Now;
 
 			try
 			{
@@ -181,6 +240,9 @@ namespace NewDb.Controllers
 			{
 				throw new DbUpdateConcurrencyException();
 			}
+
+			// Handle tags association
+			await HandleTagsAssociation(existingNews.Id, newsUpdateDTO.Tags);
 
 			return NoContent();
 		}
@@ -201,10 +263,10 @@ namespace NewDb.Controllers
 			return NoContent();
 		}
 
-		private bool NewsExists(long id)
-		{
-			return context.News.Any(e => e.Id == id);
-		}
+		//private bool NewsExists(long id)
+		//{
+		//	return context.News.Any(e => e.Id == id);
+		//}
 
 
 		//?
@@ -237,18 +299,31 @@ namespace NewDb.Controllers
 			//}
 		}
 
-		private void UpdateNewsFields(News existingNews, News updatedNews)
+		private async Task HandleTagsAssociation(long newsId, List<long> tagIds)
 		{
-			// Update fields that are present in the updatedNews
-			if (!string.IsNullOrEmpty(updatedNews.Title))
-			{
-				existingNews.Title = updatedNews.Title;
-			}
-			if (!string.IsNullOrEmpty(updatedNews.Content))
-			{
-				existingNews.Content = updatedNews.Content;
-			}
-			existingNews.Modified = DateTime.Now;
+			// Delete existing associations
+			var existingTags = await context.NewsTags.Where(nt => nt.NewsId == newsId).ToListAsync();
+			context.NewsTags.RemoveRange(existingTags);
+
+			// Create new associations
+			var newTags = tagIds.Select(tagId => new NewsTag { NewsId = newsId, TagId = tagId }).ToList();
+			context.NewsTags.AddRange(newTags);
+
+			await context.SaveChangesAsync();
 		}
+
+		//private void UpdateNewsFields(News existingNews, News updatedNews)
+		//{
+		//	// Update fields that are present in the updatedNews
+		//	if (!string.IsNullOrEmpty(updatedNews.Title))
+		//	{
+		//		existingNews.Title = updatedNews.Title;
+		//	}
+		//	if (!string.IsNullOrEmpty(updatedNews.Content))
+		//	{
+		//		existingNews.Content = updatedNews.Content;
+		//	}
+		//	existingNews.Modified = DateTime.Now;
+		//}
 	}
 }

@@ -147,10 +147,10 @@ namespace NewDb
             return NoContent();
         }
 
-        private bool CommentExists(long id)
-        {
-            return context.Comments.Any(e => e.Id == id);
-        }
+        //private bool CommentExists(long id)
+        //{
+        //    return context.Comments.Any(e => e.Id == id);
+        //}
 
         private static void UpdateCommentFields(Comment existingComment, Comment updatedComment)
         {
