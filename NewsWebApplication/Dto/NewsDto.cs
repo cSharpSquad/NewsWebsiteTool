@@ -25,7 +25,7 @@ namespace NewsWebApplication.DTO
 		[Required(ErrorMessage = "AuthorId is required.")]
 		public long AuthorId { get; set; }
 
-		public List<long> Tags { get; set; }
+		public List<long>? Tags { get; set; }
 	}
 
 	// NewsUpdateDTO.cs
@@ -36,7 +36,10 @@ namespace NewsWebApplication.DTO
 
 		public string Content { get; set; }
 
-		public List<long> Tags { get; set; }
+		public long? AuthorId { get; set; }
+
+		public List<long>? Tags { get; set; }
 	}
+
 
 }
