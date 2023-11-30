@@ -30,19 +30,31 @@ namespace NewDb
             modelBuilder.Entity<NewsTag>()
                 .HasKey(nt => new { nt.NewsId, nt.TagId });
 
-            modelBuilder.Entity<NewsTag>()
-                .HasOne(nt => nt.News)
-                .WithMany(n => n.NewsTags)
-                .HasForeignKey(nt => nt.NewsId);
+			//modelBuilder.Entity<NewsTag>()
+			//    .HasOne(nt => nt.News)
+			//    .WithMany(n => n.NewsTags)
+			//    .HasForeignKey(nt => nt.NewsId);
 
-            modelBuilder.Entity<NewsTag>()
-                .HasOne(nt => nt.Tag)
-                .WithMany(t => t.NewsTags)
-                .HasForeignKey(nt => nt.TagId);
+			//modelBuilder.Entity<NewsTag>()
+			//    .HasOne(nt => nt.Tag)
+			//    .WithMany(t => t.NewsTags)
+			//    .HasForeignKey(nt => nt.TagId);
 
-            // Additional configurations can be added as necessary 
+			modelBuilder.Entity<NewsTag>()
+	            .HasOne<News>()
+	            .WithMany()
+	            .HasForeignKey(nt => nt.NewsId)
+	            .HasPrincipalKey(news => news.Id);
 
-            base.OnModelCreating(modelBuilder);
+			modelBuilder.Entity<NewsTag>()
+				.HasOne<Tag>()
+				.WithMany()
+				.HasForeignKey(nt => nt.TagId)
+				.HasPrincipalKey(tag => tag.Id);
+
+			// Additional configurations can be added as necessary 
+
+			base.OnModelCreating(modelBuilder);
         }
     }
 }

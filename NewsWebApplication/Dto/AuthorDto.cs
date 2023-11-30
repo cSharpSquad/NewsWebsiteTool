@@ -1,4 +1,6 @@
-﻿namespace NewsWebApplication.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NewsWebApplication.DTO
 {
     public class AuthorDto
     {
@@ -14,4 +16,11 @@
         public string AuthorName { get; set; }
         public int NewsCount { get; set; }
     }
+
+	public class AuthorUpdateDto
+	{
+		[Required(ErrorMessage = "Name is required.")]
+		[StringLength(15, MinimumLength = 3)]
+		public string Name { get; set; }
+	}
 }
