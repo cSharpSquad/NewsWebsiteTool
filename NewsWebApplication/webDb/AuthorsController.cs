@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace NewDb
 {
-	// Versioning applied to the controller 
 	[ApiVersion("1.0")]
 	[Route("api/v{version:apiVersion}/[controller]")]
 	[ApiController]
@@ -17,7 +16,6 @@ namespace NewDb
 
 		public AuthorsController(ApplicationDbContext context) => this.context = context;
 
-		// GET: api/Authors with optional name filter and pagination 
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Author>>> GetAuthors(
 			[FromQuery] string namePart = "",
@@ -129,36 +127,6 @@ namespace NewDb
 			return CreatedAtAction(nameof(GetAuthor), new { id = author.Id }, author);
 		}
 
-		//// PUT: api/Authors/5
-		//[HttpPut("{id:long}")] // Adding ":long" for consistency.
-		//public async Task<IActionResult> PutAuthor(long id, Author author)
-		//{
-		//	if (id != author.Id)
-		//	{
-		//		return BadRequest();
-		//	}
-
-		//	context.Entry(author).State = EntityState.Modified;
-
-		//	try
-		//	{
-		//		await context.SaveChangesAsync();
-		//	}
-		//	catch (DbUpdateConcurrencyException)
-		//	{
-		//		if (!AuthorExists(id))
-		//		{
-		//			return NotFound();
-		//		}
-		//		else
-		//		{
-		//			throw;
-		//		}
-		//	}
-
-		//	return NoContent();
-		//}
-
 		// PUT: api/Authors/5
 		[HttpPut("{id:long}")]
 		public async Task<IActionResult> PutAuthor(long id, AuthorUpdateDto authorDto)
@@ -171,7 +139,6 @@ namespace NewDb
 				return NotFound();
 			}
 
-			// Update properties of existingAuthor based on authorDto
 			existingAuthor.Name = authorDto.Name;
 
 			context.Entry(existingAuthor).State = EntityState.Modified;

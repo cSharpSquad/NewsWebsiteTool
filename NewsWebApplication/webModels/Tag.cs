@@ -28,8 +28,5 @@ namespace NewsWebsite.Models
                 name = value;
             }
         }
-
-
-        //public ICollection<NewsTag>? NewsTags { get; set; }
     }
 }

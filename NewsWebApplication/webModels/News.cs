@@ -43,7 +43,6 @@ namespace NewsWebsite.Models
 
         public long AuthorId { get; set; }
 
-        //public Author? Author { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
@@ -52,10 +51,5 @@ namespace NewsWebsite.Models
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
         public DateTime? Modified { get; set; }
-
-        //public ICollection<Comment>? Comments { get; set; }
-
-        //public ICollection<NewsTag>? NewsTags { get; set; }
-
     }
 }

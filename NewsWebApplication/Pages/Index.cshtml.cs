@@ -69,7 +69,6 @@ namespace NewsWebApplication.Pages
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while getting news.");
-                // Handle the error appropriately, e.g., return an error page
             }
         }
     }
