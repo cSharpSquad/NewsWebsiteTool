@@ -56,8 +56,8 @@ namespace NewDb
             var commentDto = new CommentDto
             {
                 Id = comment.Id,
-                NewsId = comment.NewsId,
                 Content = comment.Content,
+                NewsId = comment.NewsId,
                 Created = comment.Created,
                 Modified = comment.Modified,
 
