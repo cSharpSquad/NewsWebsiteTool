@@ -20,7 +20,6 @@ namespace NewsWebsite.Models
 
         public long NewsId { get; set; }
 
-        //public News? News { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]

@@ -45,7 +45,6 @@ namespace NewsWebApplication.Tests
         [Test]
         public async Task GetAuthorsWithNoAuthors_ReturnsEmptyList()
         {
-            // Arrange
             var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;

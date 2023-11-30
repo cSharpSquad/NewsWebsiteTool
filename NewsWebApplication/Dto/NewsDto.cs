@@ -10,8 +10,6 @@ namespace NewsWebApplication.DTO
         public long AuthorId { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
-
-        // HATEOAS links 
         public List<LinkDto> Links { get; set; } = new List<LinkDto>();
     }
 

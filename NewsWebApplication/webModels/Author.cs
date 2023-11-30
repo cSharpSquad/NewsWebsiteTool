@@ -28,7 +28,5 @@ namespace NewsWebsite.Models
                 name = value;
             }
         }
-
-        //public ICollection<News>? News { get; set; }
     }
 }
