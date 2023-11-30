@@ -21,24 +21,12 @@ namespace NewDb
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Unique constraint for the Name field in the Tag model 
             modelBuilder.Entity<Tag>()
                 .HasIndex(t => t.Name)
                 .IsUnique();
 
-            // Defining relationships between models 
             modelBuilder.Entity<NewsTag>()
                 .HasKey(nt => new { nt.NewsId, nt.TagId });
-
-			//modelBuilder.Entity<NewsTag>()
-			//    .HasOne(nt => nt.News)
-			//    .WithMany(n => n.NewsTags)
-			//    .HasForeignKey(nt => nt.NewsId);
-
-			//modelBuilder.Entity<NewsTag>()
-			//    .HasOne(nt => nt.Tag)
-			//    .WithMany(t => t.NewsTags)
-			//    .HasForeignKey(nt => nt.TagId);
 
 			modelBuilder.Entity<NewsTag>()
 	            .HasOne<News>()
@@ -51,8 +39,6 @@ namespace NewDb
 				.WithMany()
 				.HasForeignKey(nt => nt.TagId)
 				.HasPrincipalKey(tag => tag.Id);
-
-			// Additional configurations can be added as necessary 
 
 			base.OnModelCreating(modelBuilder);
         }

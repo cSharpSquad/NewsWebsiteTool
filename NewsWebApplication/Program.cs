@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
 using System.IO;
-using NewDb; // Make sure this is the correct namespace for your ApplicationDbContext 
+using NewDb;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Exceptions;
@@ -20,10 +20,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddApiVersioning(options =>
 {
-	options.DefaultApiVersion = new ApiVersion(1, 0); // Default version is 1.0 
-	options.AssumeDefaultVersionWhenUnspecified = true; // If no version is specified, default is used 
-	options.ReportApiVersions = true; // Report which versions are supported 
-									  // Additional configuration here if needed 
+	options.DefaultApiVersion = new ApiVersion(1, 0);
+	options.AssumeDefaultVersionWhenUnspecified = true;
+	options.ReportApiVersions = true;
+									  
 });
 
 var app = builder.Build();
@@ -34,7 +34,6 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 {
-	// Add services to the container. 
 	services.AddControllersWithViews();
 	services.AddRazorPages();
 
@@ -69,13 +68,10 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 		var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 		c.IncludeXmlComments(xmlPath);
 	});
-
-	// Add any other services here 
 }
 
 void Configure(WebApplication app, IWebHostEnvironment env)
 {
-	// Configure the HTTP request pipeline. 
 	if (env.IsDevelopment())
 	{
 		app.UseDeveloperExceptionPage();

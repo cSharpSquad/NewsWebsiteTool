@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace NewDb
 {
-    // Versioning applied to the controller 
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -77,22 +76,20 @@ namespace NewDb
         [HttpGet("~/api/v{version:apiVersion}/news/{newsId:long}/comments")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByNewsId(
             long newsId,
-            [FromQuery] string sort = "CreatedDesc", // Default sort order 
+            [FromQuery] string sort = "CreatedDesc",
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
             IQueryable<Comment> query = context.Comments.Where(c => c.NewsId == newsId);
 
-            // Apply sorting 
             query = sort switch
             {
                 "CreatedAsc" => query.OrderBy(c => c.Created),
                 "ModifiedAsc" => query.OrderBy(c => c.Modified),
                 "ModifiedDesc" => query.OrderByDescending(c => c.Modified),
-                _ => query.OrderByDescending(c => c.Created), // Default sort order 
+                _ => query.OrderByDescending(c => c.Created),
             };
 
-            // Apply pagination 
             var paginatedList = await PaginatedList<Comment>.CreateAsync(query, pageNumber, pageSize);
             return Ok(paginatedList);
         }
@@ -116,7 +113,6 @@ namespace NewDb
                 return NotFound();
             }
 
-            // Update fields from updatedComment to existingComment 
             UpdateCommentFields(existingComment, updatedComment);
 
             try
@@ -132,7 +128,7 @@ namespace NewDb
         }
 
         // DELETE: api/Comments/5 
-        [HttpDelete("{id:long}")] // Adding ":long" for consistency.
+        [HttpDelete("{id:long}")]
         public async Task<IActionResult> DeleteComment(long id)
         {
             var comment = await context.Comments.FindAsync(id);
@@ -147,20 +143,13 @@ namespace NewDb
             return NoContent();
         }
 
-        //private bool CommentExists(long id)
-        //{
-        //    return context.Comments.Any(e => e.Id == id);
-        //}
-
         private static void UpdateCommentFields(Comment existingComment, Comment updatedComment)
         {
-            // Update fields that are present in the updatedComment
             if (!string.IsNullOrEmpty(updatedComment.Content))
             {
                 existingComment.Content = updatedComment.Content;
             }
             existingComment.Modified = DateTime.Now;
-            // Add similar checks and updates for other fields as needed
         }
     }
 }

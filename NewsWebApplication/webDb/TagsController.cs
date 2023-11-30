@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace NewDb
 {
-    // Versioning applied to the controller 
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -85,34 +84,6 @@ namespace NewDb
             return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tag);
         }
 
-		//// PUT: api/Tags/5
-		//// Merged PutTag and UpdateTag methods into one
-		//[HttpPut("{id:long}")] // Ensure id is of type long
-		//public async Task<IActionResult> PutTag(long id, Tag tag)
-		//{
-		//    if (id != tag.Id)
-		//    {
-		//        return BadRequest();
-		//    }
-		//    context.Entry(tag).State = EntityState.Modified;
-		//    try
-		//    {
-		//        await context.SaveChangesAsync();
-		//    }
-		//    catch (DbUpdateConcurrencyException)
-		//    {
-		//        if (!TagExists(id))
-		//        {
-		//            return NotFound();
-		//        }
-		//        else
-		//        {
-		//            throw;
-		//        }
-		//    }
-		//    return NoContent();
-		//}
-
 		// PUT: api/Tags/5
 		[HttpPut("{id:long}")]
 		public async Task<IActionResult> PutTag(long id, TagUpdateDto tagDto)
@@ -125,7 +96,6 @@ namespace NewDb
 				return NotFound();
 			}
 
-			// Update properties of existingTag based on tagDto
 			existingTag.Name = tagDto.Name;
 
 			context.Entry(existingTag).State = EntityState.Modified;
@@ -150,7 +120,7 @@ namespace NewDb
 		}
 
 		// DELETE: api/Tags/5
-		[HttpDelete("{id:long}")] // Ensure id is of type long
+		[HttpDelete("{id:long}")]
         public async Task<IActionResult> DeleteTag(long id)
         {
             var tag = await context.Tags.FindAsync(id);
