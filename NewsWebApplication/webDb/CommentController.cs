@@ -159,6 +159,7 @@ namespace NewDb
             {
                 existingComment.Content = updatedComment.Content;
             }
+            existingComment.Modified = DateTime.Now;
             // Add similar checks and updates for other fields as needed
         }
     }

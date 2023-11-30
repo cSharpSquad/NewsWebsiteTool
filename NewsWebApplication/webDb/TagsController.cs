@@ -68,11 +68,11 @@ namespace NewDb
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            var query = context.NewsTags
-                .Where(nt => nt.NewsId == newsId)
-                .Select(nt => nt.Tag);
+			var query = context.NewsTags
+		        .Where(nt => nt.NewsId == newsId)
+		        .Join(context.Tags, nt => nt.TagId, tag => tag.Id, (nt, tag) => tag);
 
-            var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
+			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
             return Ok(paginatedList);
         }
 

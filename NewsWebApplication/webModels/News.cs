@@ -11,8 +11,8 @@ namespace NewsWebsite.Models
 
         public News()
         {
-			Created = DateTime.UtcNow;
-			Modified = DateTime.UtcNow;
+			Created = DateTime.Now;
+			Modified = DateTime.Now;
 		}
 
 
@@ -43,7 +43,7 @@ namespace NewsWebsite.Models
 
         public long AuthorId { get; set; }
 
-        public Author? Author { get; set; }
+        //public Author? Author { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
@@ -53,9 +53,9 @@ namespace NewsWebsite.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss.fff}", ApplyFormatInEditMode = true)]
         public DateTime? Modified { get; set; }
 
-        public ICollection<Comment>? Comments { get; set; }
+        //public ICollection<Comment>? Comments { get; set; }
 
-        public ICollection<NewsTag>? NewsTags { get; set; }
+        //public ICollection<NewsTag>? NewsTags { get; set; }
 
     }
 }
