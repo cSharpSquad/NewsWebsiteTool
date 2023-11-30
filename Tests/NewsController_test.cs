@@ -26,8 +26,8 @@ namespace NewsWebApplication.Tests
             {
                 var author = new Author { Id = 1, Name = "Test Author" };
                 context.Authors.Add(author);
-                context.News.Add(new News { Id = 1, Title = "Test News 1", Content = "Content 1", Author = author });
-                context.News.Add(new News { Id = 2, Title = "Test News 2", Content = "Content 2", Author = author });
+                context.News.Add(new News { Id = 1, Title = "Test News 1", Content = "Content 1", AuthorId = author.Id });
+                context.News.Add(new News { Id = 2, Title = "Test News 2", Content = "Content 2", AuthorId = author.Id });
                 context.SaveChanges();
             }
 

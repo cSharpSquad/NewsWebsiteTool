@@ -147,10 +147,10 @@ namespace NewDb
             return NoContent();
         }
 
-        private bool CommentExists(long id)
-        {
-            return context.Comments.Any(e => e.Id == id);
-        }
+        //private bool CommentExists(long id)
+        //{
+        //    return context.Comments.Any(e => e.Id == id);
+        //}
 
         private static void UpdateCommentFields(Comment existingComment, Comment updatedComment)
         {
@@ -159,6 +159,7 @@ namespace NewDb
             {
                 existingComment.Content = updatedComment.Content;
             }
+            existingComment.Modified = DateTime.Now;
             // Add similar checks and updates for other fields as needed
         }
     }

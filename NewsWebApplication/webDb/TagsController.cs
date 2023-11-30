@@ -68,11 +68,11 @@ namespace NewDb
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            var query = context.NewsTags
-                .Where(nt => nt.NewsId == newsId)
-                .Select(nt => nt.Tag);
-
-            var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
+			var query = context.NewsTags
+		        .Where(nt => nt.NewsId == newsId)
+		        .Join(context.Tags, nt => nt.TagId, tag => tag.Id, (nt, tag) => tag);
+                
+			var paginatedList = await PaginatedList<Tag>.CreateAsync(query, pageNumber, pageSize);
             return Ok(paginatedList);
         }
 
@@ -85,36 +85,72 @@ namespace NewDb
             return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tag);
         }
 
-        // PUT: api/Tags/5
-        // Merged PutTag and UpdateTag methods into one
-        [HttpPut("{id:long}")] // Ensure id is of type long
-        public async Task<IActionResult> PutTag(long id, Tag tag)
-        {
-            if (id != tag.Id)
-            {
-                return BadRequest();
-            }
-            context.Entry(tag).State = EntityState.Modified;
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TagExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
-        }
+		//// PUT: api/Tags/5
+		//// Merged PutTag and UpdateTag methods into one
+		//[HttpPut("{id:long}")] // Ensure id is of type long
+		//public async Task<IActionResult> PutTag(long id, Tag tag)
+		//{
+		//    if (id != tag.Id)
+		//    {
+		//        return BadRequest();
+		//    }
+		//    context.Entry(tag).State = EntityState.Modified;
+		//    try
+		//    {
+		//        await context.SaveChangesAsync();
+		//    }
+		//    catch (DbUpdateConcurrencyException)
+		//    {
+		//        if (!TagExists(id))
+		//        {
+		//            return NotFound();
+		//        }
+		//        else
+		//        {
+		//            throw;
+		//        }
+		//    }
+		//    return NoContent();
+		//}
 
-        // DELETE: api/Tags/5
-        [HttpDelete("{id:long}")] // Ensure id is of type long
+		// PUT: api/Tags/5
+		[HttpPut("{id:long}")]
+		public async Task<IActionResult> PutTag(long id, TagUpdateDto tagDto)
+		{
+			var existingTag = await context.Tags
+				.FirstOrDefaultAsync(t => t.Id == id);
+
+			if (existingTag == null)
+			{
+				return NotFound();
+			}
+
+			// Update properties of existingTag based on tagDto
+			existingTag.Name = tagDto.Name;
+
+			context.Entry(existingTag).State = EntityState.Modified;
+
+			try
+			{
+				await context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!TagExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
+		}
+
+		// DELETE: api/Tags/5
+		[HttpDelete("{id:long}")] // Ensure id is of type long
         public async Task<IActionResult> DeleteTag(long id)
         {
             var tag = await context.Tags.FindAsync(id);

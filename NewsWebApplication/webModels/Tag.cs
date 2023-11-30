@@ -30,6 +30,6 @@ namespace NewsWebsite.Models
         }
 
 
-        public ICollection<NewsTag>? NewsTags { get; set; }
+        //public ICollection<NewsTag>? NewsTags { get; set; }
     }
 }
