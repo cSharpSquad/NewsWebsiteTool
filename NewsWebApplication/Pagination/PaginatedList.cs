@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NewsWebsite.Models;
 
 namespace NewsWebApplication.Pagination
 {
